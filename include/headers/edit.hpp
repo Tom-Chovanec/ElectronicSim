@@ -4,14 +4,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <headers/base.hpp>
-
-enum Component {
-    RESISTOR,
-    CAPACITOR,
-    INDUCTOR,
-    VOLTAGE_SOURCE,
-    CURRENT_SOURCE
-};
+#include <headers/components.hpp>
+#include <headers/hud.hpp>
 
 class Edit{
 public:
@@ -19,10 +13,11 @@ public:
     ~Edit();
     Base& base;
     Component currentComponent;
-    Component chooseComponent(Component);
+    void chooseComponent(Component);
     void placeComponent();
     void removeComponent();
-    void handleEvents();
+    void handleEvents(HUD& hud);
+    void showCurrent();
 
 };
 

@@ -1,6 +1,6 @@
 #include <headers/base.hpp>
-#include <headers/variables.hpp>
 
+bool buttonReleased = true;
 
 Base::Base() {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -123,4 +123,19 @@ TTF_Font* Base::loadFont(const char* path, int size) {
         std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
     }
     return font;
+}
+
+void Base::drawComponents() {
+    for (auto& component : components){
+        render(component->texture, component->posX, component->posY);
+    }
+}
+
+void Base::getMousePress() {
+    if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+        buttonReleased = false;
+    }
+    else {
+        buttonReleased = true;
+    }
 }

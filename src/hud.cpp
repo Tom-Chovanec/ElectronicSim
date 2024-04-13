@@ -1,5 +1,4 @@
 #include <headers/hud.hpp>
-#include <headers/variables.hpp>
 
 HUD::HUD(Base& base) : base(base) {
     // HUD phase specific initialization
@@ -14,21 +13,17 @@ void HUD::draw() {
     base.drawRect(hudRect, Colors::Primary);
 }
 
-bool buttonReleased = false;
-
 void HUD::dropDown(int x, int y, int w, int h, const char* options[], int numOptions, const char* title, TTF_Font* font, std::vector<std::function<void()>> onClicks) {
     std::pair<int, int> position = std::make_pair(x, y);
     if (open.find(position) == open.end())
         open[position] = false;
 
-    if (!(base.mouseState & SDL_BUTTON(SDL_BUTTON_LEFT))) {
-        buttonReleased = true;
-    }
-
     if ((open[position] != true) && (base.mousePos.x > x && base.mousePos.x < x + w && base.mousePos.y > y && base.mousePos.y < y + h)) {
-        if (base.mouseState & SDL_BUTTON(SDL_BUTTON_LEFT))
+        if (base.mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
             open[position] = true;
             buttonReleased = false;
+        }
+
     }
 
     if ((open[position] == true) && (base.mousePos.x > x && base.mousePos.x < x + w && base.mousePos.y > y && base.mousePos.y < y + h*numOptions)) 
@@ -53,8 +48,9 @@ void HUD::dropDown(int x, int y, int w, int h, const char* options[], int numOpt
             if ((base.mousePos.x > x && base.mousePos.x < x + w && base.mousePos.y > y + h * (i-1) && base.mousePos.y < y + h * i)) {
                 base.drawRect(rect, Colors::Primary, 2);
                 base.renderText(options[i-1], textX, textY, font, Colors::Background);
-                if (base.mouseState & SDL_BUTTON(SDL_BUTTON_LEFT) && buttonReleased) {
+                if ((base.mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) && buttonReleased) {
                     onClicks[i-1]();
+                    open[position] = false;
                     buttonReleased = false;
                 }
             }
@@ -72,4 +68,19 @@ void HUD::dropDown(int x, int y, int w, int h, const char* options[], int numOpt
         base.drawRect(rect, Colors::Secondary, 2);
         base.renderText(title, textX, textY, font, Colors::AccentWhite);
     }
+}
+
+bool HUD::isClicked(int mouseX, int mouseY) {
+    for (auto& element : elements) {
+        if (mouseX >= element.x && mouseX <= element.x + element.width &&
+            mouseY >= element.y && mouseY <= element.y + element.height) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void HUD::addElement(int x, int y, int width, int height, std::string id) {
+    Element element = {x, y, width, height, id};
+    elements.push_back(element);
 }

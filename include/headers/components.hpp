@@ -4,17 +4,43 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-class Resistor {
+class Base;
+
+enum Component {
+    NONE,
+    RESISTOR,
+    CAPACITOR,
+    INDUCTOR,
+    VOLTAGE_SOURCE,
+    CURRENT_SOURCE
+};
+
+class ComponentC {
+public:
+    ComponentC();
+    ~ComponentC();
+    Component type;
+    int posX;
+    int posY;
+    const char* imagePath;
+    SDL_Texture* texture;
+
+};
+
+class Resistor : public ComponentC {
 public:
     Resistor();
     ~Resistor();
-    SDL_Texture* texture;
-    int x, y;
-    int width, height;
-    int resistance;
-    int current; // Added current
-    int voltage; // Added voltage
+};
 
-    void calculateVoltage();
-    void calculateCurrent();
+class Capacitor : public ComponentC {
+public:
+    Capacitor();
+    ~Capacitor();
+};
+
+class Inductor : public ComponentC {
+public:
+    Inductor();
+    ~Inductor();
 };

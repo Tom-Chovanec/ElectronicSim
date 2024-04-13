@@ -1,25 +1,36 @@
 #include <headers/components.hpp>
 
-Resistor::Resistor()
-{
-    texture = nullptr;
-    x = 0;
-    y = 0;
-    width = 0;
-    height = 0;
-    resistance = 100;
+ComponentC::ComponentC() {
+    // Component specific initialization
 }
 
-Resistor::~Resistor()
-{
-    SDL_DestroyTexture(texture);
-    texture = nullptr;
+ComponentC::~ComponentC() {
+    // Component specific destruction
 }
 
-void Resistor::calculateVoltage() {
-    voltage = current * resistance;
+Resistor::Resistor() {
+    // Resistor specific initialization
+    imagePath = "res/images/resistor.png";
 }
 
-void Resistor::calculateCurrent() {
-    current = voltage / resistance;
+Resistor::~Resistor() {
+    // Resistor specific destruction
+}
+
+Capacitor::Capacitor() {
+    // Capacitor specific initialization
+    imagePath = "res/images/capacitor.png";
+}
+
+Capacitor::~Capacitor() {
+    // Capacitor specific destruction
+}
+
+Inductor::Inductor() {
+    // Inductor specific initialization
+    imagePath = "res/images/inductor.png";
+}
+
+Inductor::~Inductor() {
+    // Inductor specific destruction
 }
