@@ -1,0 +1,26 @@
+# Object files
+*.o
+*.obj
+
+# Libraries
+*.lib
+*.a
+
+# Binary
+*.exe
+*.out
+
+# Make files
+*.d
+
+# Visual Studio Code settings
+.vscode/
+
+# SDL DLLs
+*.dll
+
+include/sdl/
+
+lib/
+
+Makefile
