@@ -18,6 +18,11 @@ void HUD::dropDown(int x, int y, int w, int h, const char* options[], int numOpt
     if (open.find(position) == open.end())
         open[position] = false;
 
+    auto it = std::find_if(elements.begin(), elements.end(), [x, y](const Element& e) { return e.pos.x == x && e.pos.y == y; });
+    if (it == elements.end()) return; 
+
+    Element& element = *it;
+
     if ((open[position] != true) && (base.mousePos.x > x && base.mousePos.x < x + w && base.mousePos.y > y && base.mousePos.y < y + h)) {
         if (base.mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
             open[position] = true;
@@ -36,6 +41,8 @@ void HUD::dropDown(int x, int y, int w, int h, const char* options[], int numOpt
     int textWidth, textHeight;
 
     if (open[position] == true) {
+        element.size = {w, h * numOptions};
+
         for (int i = 1; i-1 < numOptions; i++) {
 
             TTF_SizeText(font, options[i-1], &textWidth, &textHeight);
@@ -61,6 +68,7 @@ void HUD::dropDown(int x, int y, int w, int h, const char* options[], int numOpt
         }
     }
     else {
+        element.size = {w, h};
         TTF_SizeText(font, title, &textWidth, &textHeight);
         int textX = x + (w - textWidth) / 2;
         int textY = y + (h - textHeight) / 2;
@@ -70,10 +78,10 @@ void HUD::dropDown(int x, int y, int w, int h, const char* options[], int numOpt
     }
 }
 
-bool HUD::isClicked(int mouseX, int mouseY) {
+bool HUD::isClicked(vector2 mousePos) {
     for (auto& element : elements) {
-        if (mouseX >= element.x && mouseX <= element.x + element.width &&
-            mouseY >= element.y && mouseY <= element.y + element.height) {
+        if (mousePos >= element.pos && mousePos <= element.pos + element.size){
+            std::cout << "Element clicked\n";
             return true;
         }
     }

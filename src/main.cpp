@@ -16,18 +16,12 @@ int main(int argc, char* argv[]) {
     TTF_Font* MontserratRegular = base.loadFont("fonts/Montserrat-Regular.ttf", 12);
     const char* options[7] = {"Resistor", "Capacitor", "Inductor"};
 
+    hud.addElement(20, 20, 100, 40, "Components");
+    hud.addElement(0, 0, wWidth, 80, "MainBar");
     std::vector<std::function<void()>> chooseComponents = {
         [&edit]() { edit.chooseComponent(Component(RESISTOR)); },
         [&edit]() { edit.chooseComponent(Component(CAPACITOR)); },
         [&edit]() { edit.chooseComponent(Component(INDUCTOR)); }
-    };
-    
-    hud.addElement(20, 20, 100, 40, "ComponentDropDown");
-
-    class abc {
-        // Existing code...
-  
-        // Existing code...
     };
 
     while (base.baseState != EXIT) {
@@ -37,6 +31,7 @@ int main(int argc, char* argv[]) {
         switch (base.baseState) {
         case EDIT:
             edit.handleEvents(hud);
+            if (!hud.isClicked(base.mousePos)) std::cout << "able to place\n";
             break;
         
         default:
@@ -49,12 +44,7 @@ int main(int argc, char* argv[]) {
         base.getMousePress();
         base.run();
         if (argc > 1 && std::string(argv[1]) == "1") {
-            base.frameCount++;
-            if (SDL_GetTicks() - base.startTime >= 1000) {
-                std::cout << "FPS: " << base.frameCount << std::endl;
-                base.frameCount = 0;
-                base.startTime = SDL_GetTicks();
-            }
+            base.showFps();
         }
     }
 

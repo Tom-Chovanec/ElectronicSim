@@ -11,6 +11,7 @@ ComponentC::~ComponentC() {
 Resistor::Resistor() {
     // Resistor specific initialization
     imagePath = "res/images/resistor.png";
+    gridSize = RESISTOR_SIZE;
 }
 
 Resistor::~Resistor() {
@@ -20,6 +21,7 @@ Resistor::~Resistor() {
 Capacitor::Capacitor() {
     // Capacitor specific initialization
     imagePath = "res/images/capacitor.png";
+    gridSize = CAPACITOR_SIZE;
 }
 
 Capacitor::~Capacitor() {
@@ -29,6 +31,7 @@ Capacitor::~Capacitor() {
 Inductor::Inductor() {
     // Inductor specific initialization
     imagePath = "res/images/inductor.png";
+    gridSize = INDUCTOR_SIZE;
 }
 
 Inductor::~Inductor() {

@@ -7,7 +7,8 @@
 #include <functional>
 
 struct Element {
-    int x, y, width, height;
+    vector2 pos;
+    vector2 size;
     std::string id;
     // Add other properties as needed
 };
@@ -24,7 +25,7 @@ public:
     void handleEvents();
     void dropDown(int x, int y, int w, int h, const char* options[], int numOptions, const char* title, TTF_Font* font, std::vector<std::function<void()>> onClicks);
     void selection();
-    bool isClicked(int mouseX, int mouseY);
+    bool isClicked(vector2 mousePos);
     void addElement(int x, int y, int width, int height, std::string id);
  
 };

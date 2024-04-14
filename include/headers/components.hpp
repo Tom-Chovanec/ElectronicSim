@@ -3,6 +3,7 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <variables.hpp>
 
 class Base;
 
@@ -20,8 +21,10 @@ public:
     ComponentC();
     ~ComponentC();
     Component type;
-    int posX;
-    int posY;
+    vector2 realPos;
+    vector2 gridPos;
+    vector2 realSize;
+    vector2 gridSize;
     const char* imagePath;
     SDL_Texture* texture;
 

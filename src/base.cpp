@@ -23,11 +23,16 @@ Base::~Base() {
     SDL_Quit();
 }
 
-void Base::render(SDL_Texture* texture, int x, int y) {
+void Base::render(SDL_Texture* texture, vector2 pos, vector2 size) {
     SDL_Rect dest;
-    dest.x = x;
-    dest.y = y;
-    SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+    dest.x = pos.x;
+    dest.y = pos.y;
+    if (size != 0) {
+        dest.w = size.x;
+        dest.h = size.y;
+    } else {
+        SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+    }
     SDL_RenderCopy(renderer, texture, NULL, &dest);
 }
 
@@ -64,6 +69,16 @@ void Base::handleEvents() {
                     wHeight = event.window.data2;
                 }
                 break;
+            case SDL_MOUSEWHEEL:
+                if (event.wheel.y > 0) {
+                    GRID_SIZE += 1;
+                } else if (event.wheel.y < 0) {
+                    GRID_SIZE -= 1;
+                }
+                for (auto& component : components) {
+                    component.get()->realSize = getRealSize(component.get()->gridSize);
+                }
+                break;
             default:
                 break;
             
@@ -78,10 +93,10 @@ void Base::run() {
 
 void Base::drawGrid() {
     SDL_SetRenderDrawColor(renderer, Colors::Secondary.r, Colors::Secondary.g, Colors::Secondary.b, Colors::Secondary.a);
-    for (int i = 0; i < wWidth; i += 20) {
+    for (int i = 0; i < wWidth; i += GRID_SIZE) {
         SDL_RenderDrawLine(renderer, i, 0, i, wHeight);
     }
-    for (int i = 0; i < wHeight; i += 20) {
+    for (int i = 0; i < wHeight; i += GRID_SIZE) {
         SDL_RenderDrawLine(renderer, 0, i, wWidth, i);
     }
 }
@@ -125,17 +140,48 @@ TTF_Font* Base::loadFont(const char* path, int size) {
     return font;
 }
 
+vector2 Base::getRealPos(vector2 gridCoordinates) {
+    vector2 realCoords = gridCoordinates * GRID_SIZE;
+    return realCoords;
+}
+
+vector2 Base::getGridPos(vector2 realCoordinates) {
+    vector2 gridCoords = realCoordinates / GRID_SIZE;
+    return gridCoords;
+}
+
+vector2 Base::getRealSize(vector2 gridSize) {
+    vector2 realSize = gridSize * GRID_SIZE;
+    return realSize;
+}
+
+vector2 Base::getGridSize(vector2 realSize) {
+    vector2 gridSize = realSize / GRID_SIZE;
+    return gridSize;
+}
+
 void Base::drawComponents() {
-    for (auto& component : components){
-        render(component->texture, component->posX, component->posY);
+    for (auto& component : components) {
+        component->realPos = getRealPos(component->gridPos);
+        render(component->texture, component->realPos, component->realSize);
     }
 }
 
 void Base::getMousePress() {
+
     if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
         buttonReleased = false;
     }
     else {
         buttonReleased = true;
+    }
+}
+
+void Base::showFps() {
+    frameCount++;
+    if (SDL_GetTicks() - startTime >= 1000) {
+        std::cout << "FPS: " << frameCount << std::endl;
+        frameCount = 0;
+        startTime = SDL_GetTicks();
     }
 }

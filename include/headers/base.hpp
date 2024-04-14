@@ -9,9 +9,7 @@
 #include <headers/variables.hpp>
 #include <headers/components.hpp>
 
-struct vector2 {
-    int x, y;
-};
+
 
 enum State {
     EDIT = 0,
@@ -30,10 +28,11 @@ public:
     Uint32 mouseState;
     State baseState;
     int frameCount = 0;
+    int GRID_SIZE = 20;
     Uint32 startTime = 0;
     TTF_Font* MontserratBold;
     SDL_Texture* loadTexture(const char* filePath);
-    void render(SDL_Texture* texture, int x, int y);
+    void render(SDL_Texture* texture, vector2 pos, vector2 size);
     void handleEvents();
     void run();
     void drawGrid();
@@ -42,10 +41,15 @@ public:
     void drawRect(SDL_Rect rect, SDL_Color fillColor = {0, 0, 0, 0}, int borderWidth = 0, SDL_Color borderColor = {0, 0, 0, 255});
     void renderText(const char* text, int x, int y, TTF_Font* font, SDL_Color color);
     void drawTexture(SDL_Texture* texture, int x, int y, int w, int h);
+    vector2 getRealPos(vector2 gridCoordinates);
+    vector2 getGridPos(vector2 realCoordinates);
+    vector2 getRealSize(vector2 gridSize);
+    vector2 getGridSize(vector2 realSize);
     void drawComponents();
     void getMousePress();
     TTF_Font* loadFont(const char* path, int size);
     std::vector<std::unique_ptr<ComponentC>> components;
+    void showFps();
 
 protected:
     SDL_Window* window;
